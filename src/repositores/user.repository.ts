@@ -11,6 +11,16 @@ class UserRepositoryPrima implements UserRepository {
     });
     return result;
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const result = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    return result || null;
+  }
 }
 
 export { UserRepositoryPrima };

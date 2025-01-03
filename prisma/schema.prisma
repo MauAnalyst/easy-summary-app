@@ -25,12 +25,20 @@ model User {
 }
 
 model Summarys {
-  id           String @id @default(uuid())
-  subject      String
-  questions    String
-  alternatives String
-  userID       String
-  user         User   @relation(fields: [userID], references: [id])
+  id        String      @id @default(uuid())
+  subject   String
+  summary   String
+  questions Questions[]
+  userID    String
+  user      User        @relation(fields: [userID], references: [id])
 
   @@map("summarys")
+}
+
+model Questions {
+  id           String   @id @default(uuid())
+  question     String
+  alternatives String[]
+  summaryID    String
+  summary      Summarys @relation(fields: [summaryID], references: [id])
 }

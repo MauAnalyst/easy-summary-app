@@ -5,7 +5,7 @@ import { QuestionCreate } from "../interfaces/question.interface";
 export async function questionsRoutes(fastify: FastifyInstance) {
   const questionUseCase = new QuestionUseCase();
   fastify.post<{ Body: QuestionCreate }>("/", async (req, reply) => {
-    const { question, alternatives, summaryID } = req.body;
+    const { question, alternatives, summaryID, alternativeTrue } = req.body;
 
     try {
       const data = await questionUseCase.create({

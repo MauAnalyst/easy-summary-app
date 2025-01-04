@@ -11,6 +11,7 @@ class QuestionRepositoryPrisma implements QuestionRepository {
       data: {
         question: data.question,
         alternatives: data.alternatives,
+        alternativeTrue: data.alternativeTrue,
         summaryID: data.summaryID,
       },
     });

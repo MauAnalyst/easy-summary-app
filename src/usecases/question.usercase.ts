@@ -14,10 +14,16 @@ class QuestionUseCase {
     this.questionRepository = new QuestionRepositoryPrisma();
   }
 
-  async create({ question, alternatives, summaryID }: QuestionCreate) {
+  async create({
+    question,
+    alternatives,
+    alternativeTrue,
+    summaryID,
+  }: QuestionCreate) {
     const questions = await this.questionRepository.create({
       question,
       alternatives,
+      alternativeTrue,
       summaryID,
     });
 

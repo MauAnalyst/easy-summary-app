@@ -36,11 +36,12 @@ model Summarys {
 }
 
 model Questions {
-  id           String   @id @default(uuid())
-  question     String
-  alternatives String[]
-  summaryID    String
-  summary      Summarys @relation(fields: [summaryID], references: [id])
+  id              String   @id @default(uuid())
+  question        String
+  alternatives    String[]
+  alternativeTrue String
+  summaryID       String
+  summary         Summarys @relation(fields: [summaryID], references: [id])
 
   @@map("questions")
 }

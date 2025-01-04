@@ -17,12 +17,25 @@ class SummaryRepositoryPrisma implements SummaryRepository {
               create: data.questions.map((question) => ({
                 question: question.question,
                 alternatives: question.alternatives,
+                alternativeTrue: question.alternativeTrue,
               })),
             }
           : undefined,
       },
       include: {
         questions: true, // Inclui as perguntas no retorno
+      },
+    });
+
+    return result;
+  }
+  async findAllSummarys(userID: string): Promise<Summary[]> {
+    const result = await prisma.summarys.findMany({
+      where: {
+        userID,
+      },
+      include: {
+        questions: true, // Inclua as questões na consulta
       },
     });
 

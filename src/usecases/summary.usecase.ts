@@ -24,6 +24,18 @@ class SummaryUseCase {
 
     return summary;
   }
+
+  async listenAllSumamarys(email: string) {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const summarys = await this.summaryRepository.findAllSummarys(user.id);
+
+    return summarys;
+  }
 }
 
 export { SummaryUseCase };

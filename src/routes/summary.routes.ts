@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { SummaryUseCase } from "../usecases/summary.usecase";
 import { SummaryCreate } from "../interfaces/summary.intercafe";
+import { userRoutes } from "./user.routes";
 
 export async function summaryRoutes(fastify: FastifyInstance) {
   const summaryUseCase = new SummaryUseCase();
@@ -16,6 +17,16 @@ export async function summaryRoutes(fastify: FastifyInstance) {
       });
 
       return reply.send(data);
+    } catch (error) {
+      reply.send(error);
+    }
+  });
+  fastify.get("/", async (req, reply) => {
+    const email = "mauricio@gmail.com";
+    try {
+      const data = await summaryUseCase.listenAllSumamarys(email);
+
+      return data;
     } catch (error) {
       reply.send(error);
     }

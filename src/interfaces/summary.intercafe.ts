@@ -17,5 +17,6 @@ export interface SummaryCreate {
 
 export interface SummaryRepository {
   create(data: SummaryCreate): Promise<Summary>;
+  findAllSummarys(userID: string): Promise<Summary[]>;
   //findBySummary(summary: String): Promise<Summary | null>;
 }

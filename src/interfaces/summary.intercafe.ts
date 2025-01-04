@@ -1,24 +1,21 @@
-export interface Question {
-  id: string;
-  question: string;
-  alternatives: string[];
-  summaryID: string;
-}
+import { Question } from "./question.interface";
 
 export interface Summary {
   id: string;
   subject: string;
-  summary: string;
+  textarea: string;
   questions: Question[];
   userID: string;
 }
 
 export interface SummaryCreate {
   subject: string;
-  summary: string;
-  questions: Omit<Question, "id" | "summaryID">[];
+  textarea: string;
+  userID: string;
+  questions?: Omit<Question, "id" | "summaryID">[];
 }
 
 export interface SummaryRepository {
   create(data: SummaryCreate): Promise<Summary>;
+  //findBySummary(summary: String): Promise<Summary | null>;
 }

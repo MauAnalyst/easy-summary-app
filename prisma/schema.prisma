@@ -27,7 +27,7 @@ model User {
 model Summarys {
   id        String      @id @default(uuid())
   subject   String
-  summary   String
+  textarea  String
   questions Questions[]
   userID    String
   user      User        @relation(fields: [userID], references: [id])
@@ -41,4 +41,6 @@ model Questions {
   alternatives String[]
   summaryID    String
   summary      Summarys @relation(fields: [summaryID], references: [id])
+
+  @@map("questions")
 }

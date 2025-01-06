@@ -26,7 +26,7 @@ export async function summaryRoutes(fastify: FastifyInstance) {
     try {
       const data = await summaryUseCase.listenAllSumamarys(email);
 
-      return data;
+      return reply.send(data);
     } catch (error) {
       reply.send(error);
     }

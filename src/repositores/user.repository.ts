@@ -7,6 +7,7 @@ class UserRepositoryPrima implements UserRepository {
       data: {
         name: data.name,
         email: data.email,
+        password: data.password,
       },
     });
     return result;

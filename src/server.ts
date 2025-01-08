@@ -1,10 +1,13 @@
 import fastify, { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
+import dotenv from "dotenv";
 import path from "path";
 import { userRoutes } from "./routes/user.routes";
 import { summaryRoutes } from "./routes/summary.routes";
 import { questionsRoutes } from "./routes/question.routes";
 import { homeRoutes } from "./routes/home.routes";
+
+dotenv.config();
 
 // Definir __dirname
 const __dirname = process.cwd();

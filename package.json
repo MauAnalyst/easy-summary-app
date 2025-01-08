@@ -19,8 +19,10 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@fastify/jwt": "^9.0.2",
     "@fastify/static": "^8.0.3",
     "@prisma/client": "^6.1.0",
+    "dotenv": "^16.4.7",
     "fastify": "^5.2.0"
   }
 }

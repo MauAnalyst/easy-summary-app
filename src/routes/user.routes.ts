@@ -18,7 +18,6 @@ const loginSchema = z.object({
 export async function userRoutes(fastify: FastifyInstance) {
   const userUseCase = new UserUseCase();
   fastify.post<{ Body: UserCreate }>("/create", async (req, reply) => {
-    //const { name, email, password } = req.body;
     try {
       const validatedData = userSchema.parse(req.body);
       const { name, email, password } = validatedData;
@@ -36,21 +35,28 @@ export async function userRoutes(fastify: FastifyInstance) {
   });
 
   fastify.post<{ Body: UserLogin }>("/login", async (req, reply) => {
-    //const { email, password } = req.body;
-
     try {
       const validatedData = loginSchema.parse(req.body);
-
       const { email, password } = validatedData;
 
       const user = await userUseCase.login({
         email,
         password,
       });
+
       const token = fastify.jwt.sign(
         { email: user.email, id: user.id },
-        { expiresIn: "5m" }
+        { expiresIn: "15m" }
       );
+      const refreshToken = fastify.jwt.sign(
+        { email: user.email, id: user.id },
+        { expiresIn: "7d" }
+      );
+
+      await userUseCase.updateRefreshToken({
+        email,
+        refreshToken,
+      });
 
       return token;
     } catch (error) {

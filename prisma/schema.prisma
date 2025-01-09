@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+//npx prisma migrate dev --name 
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,13 +16,14 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  summarys  Summarys[]
+  id           String     @id @default(uuid())
+  refreshToken String     @unique
+  name         String
+  email        String     @unique
+  password     String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  summarys     Summarys[]
 
   @@map("users")
 }

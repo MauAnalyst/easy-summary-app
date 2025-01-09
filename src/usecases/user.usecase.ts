@@ -1,7 +1,9 @@
+import { time } from "console";
 import {
   User,
   UserCreate,
   UserLogin,
+  UserRefreshToken,
   UserRepository,
 } from "../interfaces/user.interface";
 import { UserRepositoryPrima } from "../repositores/user.repository";
@@ -20,9 +22,11 @@ class UserUseCase {
 
     password = bcrypt.hashSync(password, 10);
 
-    const result = await this.userRepository.create({ email, name, password });
-
-    console.log(password);
+    const result = await this.userRepository.create({
+      email,
+      name,
+      password,
+    });
 
     return result;
   }
@@ -36,6 +40,18 @@ class UserUseCase {
     if (!isSamePassword) throw new Error("wrong passowrd");
 
     return user;
+  }
+
+  async updateRefreshToken({
+    email,
+    refreshToken,
+  }: UserRefreshToken): Promise<User> {
+    const result = await this.userRepository.saveRefreshToken({
+      email,
+      refreshToken,
+    });
+
+    return result;
   }
 }
 

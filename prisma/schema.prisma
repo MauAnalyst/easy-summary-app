@@ -16,16 +16,26 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  refreshToken String     @unique
-  name         String
-  email        String     @unique
-  password     String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  summarys     Summarys[]
+  id        String         @id @default(uuid())
+  name      String
+  email     String         @unique
+  password  String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  tokens    RefreshToken[]
+  Summarys  Summarys[]
 
   @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userID    String   @unique
+  user      User     @relation(fields: [userID], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
 }
 
 model Summarys {

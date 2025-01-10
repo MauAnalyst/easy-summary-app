@@ -2,7 +2,8 @@ import { prisma } from "../database/prisma-client";
 import {
   User,
   UserCreate,
-  UserRefreshToken,
+  UserToken,
+  UserTokenCreate,
   UserRepository,
 } from "../interfaces/user.interface";
 
@@ -28,16 +29,34 @@ class UserRepositoryPrima implements UserRepository {
     return result || null;
   }
 
-  async saveRefreshToken({
-    email,
-    refreshToken,
-  }: UserRefreshToken): Promise<User> {
-    const result = await prisma.user.update({
+  async createToken(data: UserTokenCreate): Promise<UserToken> {
+    const result = await prisma.refreshToken.create({
+      data: {
+        token: data.token,
+        userID: data.userID,
+      },
+    });
+
+    return result;
+  }
+
+  async findByToken(userID: string): Promise<UserToken | null> {
+    const result = await prisma.refreshToken.findFirst({
       where: {
-        email,
+        userID,
+      },
+    });
+
+    return result || null;
+  }
+
+  async updateToken({ token, userID }: UserTokenCreate): Promise<UserToken> {
+    const result = await prisma.refreshToken.update({
+      where: {
+        userID,
       },
       data: {
-        refreshToken,
+        token,
       },
     });
 

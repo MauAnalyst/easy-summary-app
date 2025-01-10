@@ -44,7 +44,9 @@ export async function userRoutes(fastify: FastifyInstance) {
         password,
       });
 
-      const token = fastify.jwt.sign(
+      if (!user) throw new Error("user not found");
+
+      const Acesstoken = fastify.jwt.sign(
         { email: user.email, id: user.id },
         { expiresIn: "15m" }
       );
@@ -53,12 +55,12 @@ export async function userRoutes(fastify: FastifyInstance) {
         { expiresIn: "7d" }
       );
 
-      await userUseCase.updateRefreshToken({
-        email,
-        refreshToken,
+      await userUseCase.saveToken({
+        token: refreshToken,
+        userID: user.id,
       });
 
-      return token;
+      return [user, Acesstoken, refreshToken];
     } catch (error) {
       reply.send(error);
     }

@@ -1,9 +1,8 @@
-import { time } from "console";
 import {
   User,
   UserCreate,
+  UserToken,
   UserLogin,
-  UserRefreshToken,
   UserRepository,
 } from "../interfaces/user.interface";
 import { UserRepositoryPrima } from "../repositores/user.repository";
@@ -31,7 +30,7 @@ class UserUseCase {
     return result;
   }
 
-  async login({ email, password }: UserLogin): Promise<User> {
+  async login({ email, password }: UserLogin): Promise<User | null> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) throw new Error("user not found");
@@ -42,16 +41,13 @@ class UserUseCase {
     return user;
   }
 
-  async updateRefreshToken({
-    email,
-    refreshToken,
-  }: UserRefreshToken): Promise<User> {
-    const result = await this.userRepository.saveRefreshToken({
-      email,
-      refreshToken,
+  async saveToken({ token, userID }: UserToken): Promise<UserToken | null> {
+    const userToken = await this.userRepository.createToken({
+      token,
+      userID,
     });
 
-    return result;
+    return userToken;
   }
 }
 

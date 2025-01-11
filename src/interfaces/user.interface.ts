@@ -30,6 +30,11 @@ export interface UserTokenCreate {
   userID: string;
 }
 
+export interface JwtPayload {
+  email: string;
+  id: string;
+}
+
 export interface UserRepository {
   create(data: UserCreate): Promise<User>;
   findByEmail(email: string): Promise<User | null>;

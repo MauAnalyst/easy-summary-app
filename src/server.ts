@@ -3,6 +3,7 @@ import fastifyStatic from "@fastify/static";
 import dotenv from "dotenv";
 import path from "path";
 import fastifyJwt from "@fastify/jwt";
+import fastifyCookie from "@fastify/cookie";
 import { userRoutes } from "./routes/user.routes";
 import { summaryRoutes } from "./routes/summary.routes";
 import { questionsRoutes } from "./routes/question.routes";
@@ -14,6 +15,8 @@ dotenv.config();
 const __dirname = process.cwd();
 
 const app: FastifyInstance = fastify({ logger: true });
+
+app.register(fastifyCookie);
 
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET || "defaultsecret", // Use uma variável de ambiente para maior segurança

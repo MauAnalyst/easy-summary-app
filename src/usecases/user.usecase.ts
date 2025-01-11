@@ -30,7 +30,16 @@ class UserUseCase {
     return result;
   }
 
-  async login({ email, password }: UserLogin): Promise<User | null> {
+  async getUser(userID: string): Promise<User | null> {
+    const user = await this.userRepository.findByEmail(userID);
+
+    return user || null;
+  }
+
+  async login({
+    email,
+    password,
+  }: UserLogin): Promise<[User | null, UserToken | null]> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) throw new Error("user not found");
@@ -38,16 +47,31 @@ class UserUseCase {
     const isSamePassword = bcrypt.compareSync(password, user.password);
     if (!isSamePassword) throw new Error("wrong passowrd");
 
-    return user;
+    let checkToken = await this.userRepository.findByToken(user.id);
+
+    if (!checkToken) {
+      checkToken = await this.userRepository.createToken({
+        token: "",
+        userID: user.id,
+      });
+    }
+
+    return [user, checkToken];
   }
 
   async saveToken({ token, userID }: UserToken): Promise<UserToken | null> {
-    const userToken = await this.userRepository.createToken({
+    const userToken = await this.userRepository.updateToken({
       token,
       userID,
     });
 
     return userToken;
+  }
+
+  async getToken(userID: string): Promise<UserToken | null> {
+    const userToken = await this.userRepository.findByToken(userID);
+
+    return userToken || null;
   }
 }
 

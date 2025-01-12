@@ -54,7 +54,7 @@ export async function userRoutes(fastify: FastifyInstance) {
 
       const accessToken = fastify.jwt.sign(
         { email: user.email, id: user.id },
-        { expiresIn: "15m" }
+        { expiresIn: "1m" }
       );
       const refreshToken = fastify.jwt.sign(
         { email: user.email, id: user.id },
@@ -74,7 +74,14 @@ export async function userRoutes(fastify: FastifyInstance) {
           path: "/",
           maxAge: 7 * 24 * 60 * 60, // 7 dias
         })
-        .send({ user, accessToken });
+        .setCookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "strict",
+          path: "/",
+          maxAge: 15 * 60,
+        })
+        .send({ user });
     } catch (error) {
       reply.send(error);
     }
@@ -84,7 +91,7 @@ export async function userRoutes(fastify: FastifyInstance) {
     "/dashboard",
     { preHandler: [authenticate] },
     async (req, reply) => {
-      return { data: "You have access to protected data!" };
+      return reply.sendFile("dashboard.html");
     }
   );
 
@@ -94,8 +101,6 @@ export async function userRoutes(fastify: FastifyInstance) {
       if (!refreshToken) throw new Error("Refresh token is missing");
 
       const decoded = fastify.jwt.verify<JwtPayload>(refreshToken);
-
-      console.log(decoded);
 
       const user = await userUseCase.getUser(decoded.email);
       if (!user) throw new Error("User not found");
@@ -107,7 +112,7 @@ export async function userRoutes(fastify: FastifyInstance) {
 
       const newAccessToken = fastify.jwt.sign(
         { email: user.email, id: user.id },
-        { expiresIn: "15m" }
+        { expiresIn: "1m" }
       );
       const newRefreshToken = fastify.jwt.sign(
         { email: user.email, id: user.id },
@@ -116,16 +121,24 @@ export async function userRoutes(fastify: FastifyInstance) {
 
       await userUseCase.saveToken({ token: newRefreshToken, userID: user.id });
 
-      reply.setCookie("refreshToken", newRefreshToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "strict",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60, // 7 dias
-      });
+      reply
+        .setCookie("refreshToken", newRefreshToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "strict",
+          path: "/",
+          maxAge: 7 * 24 * 60 * 60, // 7 dias
+        })
+        .setCookie("accessToken", newAccessToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "strict",
+          path: "/",
+          maxAge: 15 * 60,
+        });
 
       // Retorna o novo access token
-      return reply.send({ accessToken: newAccessToken });
+      return reply.send({ user });
     } catch (error) {
       return reply.status(401).send(error);
     }

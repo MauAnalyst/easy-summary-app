@@ -11,6 +11,8 @@
       <input type="email" id="email" name="email" />
       <input type="password" id="password" name="password" />
       <button type="submit">entrar</button>
+
+      <p id="erro"></p>
     </form>
 
     <script>
@@ -22,28 +24,31 @@
           const formData = new FormData(event.target);
           const data = Object.fromEntries(formData.entries()); // Converte os dados do formulário para um objeto
 
-          try {
-            const response = await fetch("/users/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            });
+          const response = await fetch("/users/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
 
-            const result = await response.json();
+          const result = await response.json();
 
-            console.log(result);
+          console.log(result.accessToken);
 
-            if (response.ok) {
-              window.location.href = "/users/dashboard";
-            } else {
-              const error = await response.json();
-              alert(`Erro: ${error.message}`);
-            }
-          } catch (error) {
-            console.error("Erro na requisição:", error);
-            alert("Ocorreu um erro inesperado. Tente novamente mais tarde.");
+          if (response.ok) {
+            // await fetch("/users/dashboard", {
+            //   method: "GET",
+            //   headers: {
+            //     Authorization: `Bearer ${result.accessToken}`,
+            //   },
+            // });
+
+            window.location.href = "/users/dashboard";
+          } else {
+            const error = await response.json();
+            //console.log(error.message);
+            document.querySelector("#erro").textContent = error.message;
           }
         });
     </script>

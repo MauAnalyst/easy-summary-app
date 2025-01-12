@@ -5,9 +5,27 @@ export async function authenticate(
   reply: FastifyReply
 ) {
   try {
-    console.log(request);
-    await request.jwtVerify();
+    const token = request.cookies.accessToken;
+
+    if (!token) {
+      throw new Error("Access token missing");
+    }
+
+    const decoded = request.server.jwt.verify(token);
+
+    request.user = decoded;
   } catch (error) {
-    reply.send(error);
+    const refreshToken = request.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new Error("Refresh token missing");
+    }
+
+    const decoded = request.server.jwt.verify(refreshToken);
+
+    if (!decoded) {
+      throw new Error("Refresh token inválido");
+    }
+
+    request.user = decoded;
   }
 }

@@ -22,7 +22,7 @@ app.register(fastifyCookie);
 app.register(formbody);
 
 app.register(fastifyJwt, {
-  secret: process.env.JWT_SECRET || "defaultsecret", // Use uma variável de ambiente para maior segurança
+  secret: process.env.JWT_SECRET || "defaultsecret",
 });
 
 app.register(fastifyStatic, {

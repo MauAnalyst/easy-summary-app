@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dashboard</title>
+  </head>
+  <body>
+    <h1>dashboard</h1>
+    <p>Olá, <span id="text"></span></p>
+
+    <script>
+      const getData = async () => {
+        const response = await fetch("/users/refresh-token", {
+          method: "POST",
+        });
+        const result = await response.json();
+
+        document.querySelector("#text").textContent = result.user.name;
+      };
+
+      getData();
+    </script>
+  </body>
+</html>

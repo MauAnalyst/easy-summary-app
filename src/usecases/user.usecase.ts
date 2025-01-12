@@ -30,8 +30,8 @@ class UserUseCase {
     return result;
   }
 
-  async getUser(userID: string): Promise<User | null> {
-    const user = await this.userRepository.findByEmail(userID);
+  async getUser(email: string): Promise<User | null> {
+    const user = await this.userRepository.findByEmail(email);
 
     return user || null;
   }

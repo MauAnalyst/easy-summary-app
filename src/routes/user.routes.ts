@@ -81,7 +81,7 @@ export async function userRoutes(fastify: FastifyInstance) {
   });
 
   fastify.get(
-    "/protected",
+    "/dashboard",
     { preHandler: [authenticate] },
     async (req, reply) => {
       return { data: "You have access to protected data!" };
@@ -94,7 +94,10 @@ export async function userRoutes(fastify: FastifyInstance) {
       if (!refreshToken) throw new Error("Refresh token is missing");
 
       const decoded = fastify.jwt.verify<JwtPayload>(refreshToken);
-      const user = await userUseCase.getUser(decoded.id);
+
+      console.log(decoded);
+
+      const user = await userUseCase.getUser(decoded.email);
       if (!user) throw new Error("User not found");
 
       const storedToken = await userUseCase.getToken(user.id);

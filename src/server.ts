@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
+import formbody from "@fastify/formbody";
 import dotenv from "dotenv";
 import path from "path";
 import fastifyJwt from "@fastify/jwt";
@@ -17,6 +18,8 @@ const __dirname = process.cwd();
 const app: FastifyInstance = fastify({ logger: true });
 
 app.register(fastifyCookie);
+
+app.register(formbody);
 
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET || "defaultsecret", // Use uma variável de ambiente para maior segurança

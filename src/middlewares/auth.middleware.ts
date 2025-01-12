@@ -5,8 +5,9 @@ export async function authenticate(
   reply: FastifyReply
 ) {
   try {
+    console.log(request);
     await request.jwtVerify();
-  } catch (err) {
-    reply.code(401).send({ error: "Unauthorized" });
+  } catch (error) {
+    reply.send(error);
   }
 }

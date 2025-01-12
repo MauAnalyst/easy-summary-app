@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,5 +7,45 @@
   </head>
   <body>
     <h1>home page</h1>
+    <form action="/users/login" method="post">
+      <input type="email" id="email" name="email" />
+      <input type="password" id="password" name="password" />
+      <button type="submit">entrar</button>
+    </form>
+
+    <script>
+      document
+        .querySelector("form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Previne o envio padrão do formulário
+
+          const formData = new FormData(event.target);
+          const data = Object.fromEntries(formData.entries()); // Converte os dados do formulário para um objeto
+
+          try {
+            const response = await fetch("/users/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            console.log(result);
+
+            if (response.ok) {
+              window.location.href = "/users/dashboard";
+            } else {
+              const error = await response.json();
+              alert(`Erro: ${error.message}`);
+            }
+          } catch (error) {
+            console.error("Erro na requisição:", error);
+            alert("Ocorreu um erro inesperado. Tente novamente mais tarde.");
+          }
+        });
+    </script>
   </body>
 </html>

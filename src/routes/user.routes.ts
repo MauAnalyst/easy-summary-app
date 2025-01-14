@@ -87,6 +87,38 @@ export async function userRoutes(fastify: FastifyInstance) {
     }
   });
 
+  fastify.get("/logout", async (req, reply) => {
+    try {
+      const { refreshToken } = req.cookies;
+
+      reply
+        .clearCookie("refreshToken", {
+          httpOnly: true,
+          secure: false, // True para PRD
+          sameSite: "strict",
+          path: "/",
+        })
+        .clearCookie("accessToken", {
+          httpOnly: true,
+          secure: false, // True para PRD
+          sameSite: "strict",
+          path: "/",
+        });
+
+      if (refreshToken) {
+        const decoded = fastify.jwt.verify<JwtPayload>(refreshToken);
+        const user = await userUseCase.getUser(decoded.email);
+        if (user) {
+          await userUseCase.saveToken({ token: "", userID: user.id });
+        }
+      }
+
+      return reply.redirect("/");
+    } catch (error) {
+      return reply.status(500).send(error);
+    }
+  });
+
   fastify.get(
     "/dashboard",
     { preHandler: [authenticate] },

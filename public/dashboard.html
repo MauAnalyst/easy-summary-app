@@ -9,6 +9,8 @@
     <h1>dashboard</h1>
     <p>Olá, <span id="text"></span></p>
 
+    <a href="/users/logout">deslogar</a>
+
     <script>
       const getData = async () => {
         const response = await fetch("/users/refresh-token", {
@@ -20,6 +22,10 @@
       };
 
       getData();
+
+      // const logout = () => {
+
+      // }
     </script>
   </body>
 </html>

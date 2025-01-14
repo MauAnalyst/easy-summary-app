@@ -8,7 +8,8 @@ export async function authenticate(
     const token = request.cookies.accessToken;
 
     if (!token) {
-      throw new Error("Access token missing");
+      console.log("Access token missing");
+      throw new Error("Unauthorized");
     }
 
     const decoded = request.server.jwt.verify(token);
@@ -17,7 +18,8 @@ export async function authenticate(
   } catch (error) {
     const refreshToken = request.cookies.refreshToken;
     if (!refreshToken) {
-      throw new Error("Refresh token missing");
+      console.log("Refresh token missing");
+      throw new Error("Unauthorized");
     }
 
     const decoded = request.server.jwt.verify(refreshToken);

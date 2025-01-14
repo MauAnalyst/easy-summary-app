@@ -31,7 +31,7 @@ app.register(fastifyStatic, {
 });
 
 app.register(userRoutes, {
-  prefix: "/users",
+  prefix: "/user",
 });
 
 app.register(homeRoutes, {
